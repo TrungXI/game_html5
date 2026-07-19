@@ -1,11 +1,13 @@
 /** Stable identifier for a game — also the key under which its high score is stored. */
-export type GameId = "tapjumper" | "stack";
+export type GameId = "tapjumper" | "stack" | "snake" | "breakout" | "game2048";
 
 export interface GameMeta {
   id: GameId;
   title: string;
   /** The Phaser scene key started when this game is chosen. */
   sceneKey: string;
+  /** True if this game persists an in-progress state that can be resumed. */
+  supportsCheckpoint: boolean;
 }
 
 /**
@@ -14,8 +16,11 @@ export interface GameMeta {
  * game: create its scene, register the scene in gameConfig, then add a row here.
  */
 export const GAMES: readonly GameMeta[] = [
-  { id: "tapjumper", title: "TAP JUMPER", sceneKey: "Game" },
-  { id: "stack", title: "STACK TOWER", sceneKey: "Stack" },
+  { id: "tapjumper", title: "TAP JUMPER", sceneKey: "Game", supportsCheckpoint: false },
+  { id: "stack", title: "STACK TOWER", sceneKey: "Stack", supportsCheckpoint: false },
+  { id: "snake", title: "SNAKE", sceneKey: "Snake", supportsCheckpoint: false },
+  { id: "breakout", title: "BREAKOUT", sceneKey: "Breakout", supportsCheckpoint: true },
+  { id: "game2048", title: "2048", sceneKey: "Game2048", supportsCheckpoint: true },
 ];
 
 export function getGameMeta(id: GameId): GameMeta {

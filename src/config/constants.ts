@@ -53,3 +53,59 @@ export const SAVE_KEY = "html5-arcade-starter:v1";
 
 // SDK — default provider when VITE_SDK_PROVIDER is not set (local dev = noop).
 export const SDK_PROVIDER: "noop" | "poki" | "crazygames" = "noop";
+
+// ── Rank / progression ──────────────────────────────────────────────
+export const RANK_SAVE_KEY = "html5-arcade-starter:rank:v1";
+// XP awarded per game-over run = XP_BASE + floor(score * xpPerPoint[gameId]).
+export const XP_BASE = 5;
+export const XP_PER_POINT: Record<string, number> = {
+  tapjumper: 2, // score is # obstacles passed (small numbers)
+  stack: 2, // score is # blocks stacked
+  snake: 3, // score is # apples eaten
+  breakout: 1, // score is points (10 per brick — larger numbers)
+  game2048: 1, // score is the 2048 running score (large)
+};
+// Rank tiers: cumulative XP thresholds, ascending. index 0 is the floor tier.
+export const RANKS: readonly { title: string; minXP: number; color: number }[] = [
+  { title: "BRONZE", minXP: 0, color: 0xcd7f32 },
+  { title: "SILVER", minXP: 100, color: 0xc0c0c0 },
+  { title: "GOLD", minXP: 300, color: 0xffd166 },
+  { title: "PLATINUM", minXP: 700, color: 0x4fc3f7 },
+  { title: "DIAMOND", minXP: 1500, color: 0x06d6a0 },
+];
+
+// ── Checkpoint ──────────────────────────────────────────────────────
+export const CHECKPOINT_SAVE_KEY = "html5-arcade-starter:checkpoint:v1";
+
+// ── Menu card grid ──────────────────────────────────────────────────
+export const CARD_COLOR = 0x2e3f52;
+export const CARD_COLOR_ACTIVE = 0x4fc3f7;
+
+// ── Snake ───────────────────────────────────────────────────────────
+export const SNAKE_COLS = 15;
+export const SNAKE_ROWS = 20;
+export const SNAKE_STEP_MS = 140; // ms per grid step (constant speed)
+export const SNAKE_HEAD_COLOR = 0x06d6a0;
+export const SNAKE_BODY_COLOR = 0x4fc3f7;
+export const SNAKE_FOOD_COLOR = 0xff6b6b;
+
+// ── Breakout ────────────────────────────────────────────────────────
+export const BREAKOUT_BRICK_ROWS = 5;
+export const BREAKOUT_BRICK_COLS = 8;
+export const BREAKOUT_LIVES = 3;
+export const BREAKOUT_PADDLE_WIDTH = 200;
+export const BREAKOUT_PADDLE_HEIGHT = 32;
+export const BREAKOUT_PADDLE_SPEED = 900; // px/sec for keyboard move
+export const BREAKOUT_BALL_SIZE = 28;
+export const BREAKOUT_BALL_SPEED = 560; // px/sec
+export const BREAKOUT_BRICK_SCORE = 10;
+
+// ── 2048 ────────────────────────────────────────────────────────────
+export const G2048_SIZE = 4; // 4×4 grid
+export const G2048_START_TILES = 2;
+export const G2048_WIN_VALUE = 2048;
+export const TILE_COLORS: Record<number, number> = {
+  2: 0x2e3f52, 4: 0x3a4a5e, 8: 0xff9f1c, 16: 0xff6b6b, 32: 0xff4757,
+  64: 0xe8452e, 128: 0xffd166, 256: 0xffc233, 512: 0xffb700,
+  1024: 0x06d6a0, 2048: 0x4fc3f7,
+};

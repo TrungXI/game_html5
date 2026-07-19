@@ -21,6 +21,7 @@ import { Obstacle } from "../objects/Obstacle";
 import { Player } from "../objects/Player";
 import type { IGameSDK } from "../sdk/IGameSDK";
 import { AudioManager } from "../systems/AudioManager";
+import { RankSystem } from "../systems/RankSystem";
 import { SaveSystem } from "../systems/SaveSystem";
 
 /** The demo mini-game: "Tap Jumper" — a one-button avoider. */
@@ -172,6 +173,7 @@ export class GameScene extends Phaser.Scene {
 
     this.sdk.gameplayStop();
     const isNewBest = SaveSystem.submitScore(this.gameId, this.score);
+    RankSystem.addXP(this.gameId, this.score);
     const highScore = SaveSystem.getHighScore(this.gameId);
 
     void this.sdk.showInterstitial().then(() => {

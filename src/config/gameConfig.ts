@@ -5,6 +5,9 @@ import { PreloadScene } from "../scenes/PreloadScene";
 import { MenuScene } from "../scenes/MenuScene";
 import { GameScene } from "../scenes/GameScene";
 import { StackScene } from "../scenes/StackScene";
+import { SnakeScene } from "../scenes/SnakeScene";
+import { BreakoutScene } from "../scenes/BreakoutScene";
+import { Game2048Scene } from "../scenes/Game2048Scene";
 import { GameOverScene } from "../scenes/GameOverScene";
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -27,6 +30,9 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     MenuScene,
     GameScene,
     StackScene,
+    SnakeScene,
+    BreakoutScene,
+    Game2048Scene,
     GameOverScene,
   ],
 };
