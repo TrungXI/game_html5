@@ -3,3 +3,7 @@ dist/
 *.local
 .DS_Store
 .vite/
+
+# build artifacts / deploy
+*.zip
+.vercel/
