@@ -107,7 +107,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   private bindInput(): void {
-    const jump = () => this.player.jump();
+    const jump = () => {
+      this.player.jump();
+      this.audio.play("jump");
+    };
     this.input.on("pointerdown", jump);
     this.input.keyboard?.on("keydown-SPACE", jump);
   }
@@ -169,7 +172,7 @@ export class GameScene extends Phaser.Scene {
     // Freeze the simulation before awaiting the ad so the frame doesn't drift.
     this.spawnTimer.remove(false);
     this.physics.pause();
-    this.audio.play("hit");
+    this.audio.play("lose");
 
     this.sdk.gameplayStop();
     const isNewBest = SaveSystem.submitScore(this.gameId, this.score);

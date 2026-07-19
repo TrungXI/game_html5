@@ -258,6 +258,7 @@ export class StackScene extends Phaser.Scene {
   private endRun(): void {
     if (this.isOver) return;
     this.isOver = true;
+    this.audio.play("lose");
 
     this.sdk.gameplayStop();
     const isNewBest = SaveSystem.submitScore(this.gameId, this.score);

@@ -3,10 +3,12 @@ import {
   CARD_COLOR,
   CARD_COLOR_ACTIVE,
   COLOR,
+  GAME_ACCENTS,
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "../config/constants";
 import { GAMES, type GameMeta } from "../config/games";
+import { AudioManager } from "../systems/AudioManager";
 import { CheckpointSystem } from "../systems/CheckpointSystem";
 import { RankSystem } from "../systems/RankSystem";
 import { SaveSystem } from "../systems/SaveSystem";
@@ -28,13 +30,15 @@ interface Card {
  * Game-select: a data-driven 2-column card grid over GAMES, a rank/XP banner on
  * top, and a per-game "CONTINUE" affordance for games with a saved checkpoint.
  * Fully playable by pointer (tap card = New Game; tap Continue badge = resume)
- * and keyboard (arrows / 1-5 / Enter / Space / C). The grid lives in a Container
- * so a 6th game later can scroll into view; with 5 games it fits 1280 tall.
+ * and keyboard (arrows / number keys / Enter / Space / C). The grid lives in a
+ * Container that scrolls, so it holds any number of games (6 today).
  */
 export class MenuScene extends Phaser.Scene {
   private cards: Card[] = [];
   private grid!: Phaser.GameObjects.Container;
   private selected = 0;
+  private muteBtn!: Phaser.GameObjects.Text;
+  private audio!: AudioManager;
 
   private cardWidth = 0;
   private viewTop = 0; // top of the scrollable viewport (world y)
@@ -47,6 +51,7 @@ export class MenuScene extends Phaser.Scene {
   create(): void {
     this.cards = [];
     this.selected = 0;
+    this.audio = new AudioManager(this);
 
     const cx = GAME_WIDTH / 2;
 
@@ -59,6 +64,7 @@ export class MenuScene extends Phaser.Scene {
       .setOrigin(0.5, 0);
 
     this.createRankBanner();
+    this.createMuteButton();
 
     // Viewport for the (potentially scrolling) grid: from GRID_TOP to the hint.
     this.viewTop = GRID_TOP;
@@ -113,6 +119,40 @@ export class MenuScene extends Phaser.Scene {
   }
 
   /**
+   * A speaker glyph in the top-right corner (no art file — a Unicode symbol).
+   * Pointer tap or the 'M' key toggles the persisted mute flag and re-labels it.
+   */
+  private createMuteButton(): void {
+    this.muteBtn = this.add
+      .text(GAME_WIDTH - 20, 20, this.muteLabel(), {
+        color: COLOR.accent,
+        fontSize: "44px",
+      })
+      .setOrigin(1, 0)
+      .setInteractive({ useHandCursor: true });
+    this.muteBtn.on("pointerdown", (
+      _p: Phaser.Input.Pointer,
+      _x: number,
+      _y: number,
+      event: Phaser.Types.Input.EventData,
+    ) => {
+      event.stopPropagation();
+      this.toggleMute();
+    });
+    this.input.keyboard?.on("keydown-M", () => this.toggleMute());
+  }
+
+  private muteLabel(): string {
+    return AudioManager.isMuted() ? "SOUND: OFF" : "SOUND: ON";
+  }
+
+  private toggleMute(): void {
+    const nowMuted = AudioManager.toggleMute();
+    this.muteBtn.setText(this.muteLabel());
+    if (!nowMuted) this.audio.play("click"); // audible confirm only when unmuting
+  }
+
+  /**
    * A single game card. Two tap zones (documented): the card body starts a New
    * Game; when a checkpoint exists, a "CONTINUE" badge overlays the lower card
    * and its own tap starts a resume instead. Keyboard C also resumes.
@@ -134,6 +174,13 @@ export class MenuScene extends Phaser.Scene {
     });
     // Tap the card body → New Game (fresh run wipes any stale checkpoint).
     bg.on("pointerdown", () => this.startNew(game));
+
+    // A thin accent strip along the card top so each game reads at a glance.
+    // Drawn over the card body (added to grid after bg below).
+    const accent = GAME_ACCENTS[game.id] ?? CARD_COLOR_ACTIVE;
+    const accentStrip = this.add
+      .rectangle(x, y, this.cardWidth, 10, accent)
+      .setOrigin(0, 0);
 
     const title = this.add
       .text(cxCard, y + 60, game.title, {
@@ -173,6 +220,7 @@ export class MenuScene extends Phaser.Scene {
     }
 
     this.grid.add(bg);
+    this.grid.add(accentStrip);
     this.grid.add(title);
     this.grid.add(best);
     if (continueBadge) this.grid.add(continueBadge);
@@ -249,6 +297,7 @@ export class MenuScene extends Phaser.Scene {
   }
 
   private startNew(game: GameMeta): void {
+    this.audio.play("click");
     if (game.supportsCheckpoint) CheckpointSystem.clear(game.id); // fresh run wipes stale save
     this.scene.start(game.sceneKey, { gameId: game.id });
   }

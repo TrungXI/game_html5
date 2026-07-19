@@ -50,6 +50,7 @@ export const SCORE_PER_PASS = 1; // +1 when an obstacle is cleared
 
 // Storage
 export const SAVE_KEY = "html5-arcade-starter:v1";
+export const MUTE_SAVE_KEY = "html5-arcade-starter:mute:v1";
 
 // SDK — default provider when VITE_SDK_PROVIDER is not set (local dev = noop).
 export const SDK_PROVIDER: "noop" | "poki" | "crazygames" = "noop";
@@ -64,6 +65,9 @@ export const XP_PER_POINT: Record<string, number> = {
   snake: 3, // score is # apples eaten
   breakout: 1, // score is points (10 per brick — larger numbers)
   game2048: 1, // score is the 2048 running score (large)
+  // score is 10..1000 move-efficiency points; scale down so one game (~50 XP for a
+  // perfect run) stays in line with the other games rather than leaping tiers.
+  memory: 0.05,
 };
 // Rank tiers: cumulative XP thresholds, ascending. index 0 is the floor tier.
 export const RANKS: readonly { title: string; minXP: number; color: number }[] = [
@@ -109,3 +113,37 @@ export const TILE_COLORS: Record<number, number> = {
   64: 0xe8452e, 128: 0xffd166, 256: 0xffc233, 512: 0xffb700,
   1024: 0x06d6a0, 2048: 0x4fc3f7,
 };
+
+// ── Per-game accent color ───────────────────────────────────────────
+// A distinct tint per game, used as a top strip on its menu card so the grid
+// reads at a glance. Keyed by GameId; MenuScene falls back to CARD_COLOR_ACTIVE.
+export const GAME_ACCENTS: Record<string, number> = {
+  tapjumper: 0x4fc3f7, // sky blue
+  stack: 0xffd166, // amber
+  snake: 0x06d6a0, // green
+  breakout: 0xff6b6b, // coral
+  game2048: 0xa78bfa, // violet
+  memory: 0xff9f1c, // orange
+};
+
+// ── Memory Match ────────────────────────────────────────────────────
+export const MEMORY_COLS = 4;
+export const MEMORY_ROWS = 4; // 4×4 = 16 cards = 8 pairs (fits 720×1280 portrait)
+export const MEMORY_MISMATCH_DELAY = 700; // ms a mismatched pair stays face-up
+export const MEMORY_CARD_BACK = 0x2e3f52;
+export const MEMORY_CARD_FACE = 0x1b2838;
+// Base score for a perfect game; each move over the minimum shaves points (min 10).
+export const MEMORY_SCORE_BASE = 1000;
+export const MEMORY_SCORE_PER_MOVE = 20;
+// The 8 distinct pair identities: a symbol drawn in a color (zero art files).
+// `shape` is rendered by MemoryScene's Graphics; each pair shares symbol + color.
+export const MEMORY_SYMBOLS: readonly { shape: "circle" | "square" | "triangle" | "diamond"; color: number }[] = [
+  { shape: "circle", color: 0x4fc3f7 },
+  { shape: "square", color: 0xff6b6b },
+  { shape: "triangle", color: 0xffd166 },
+  { shape: "diamond", color: 0x06d6a0 },
+  { shape: "circle", color: 0xa78bfa },
+  { shape: "square", color: 0xff9f1c },
+  { shape: "triangle", color: 0x06d6a0 },
+  { shape: "diamond", color: 0xff6b6b },
+];

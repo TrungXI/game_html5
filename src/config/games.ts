@@ -1,5 +1,5 @@
 /** Stable identifier for a game — also the key under which its high score is stored. */
-export type GameId = "tapjumper" | "stack" | "snake" | "breakout" | "game2048";
+export type GameId = "tapjumper" | "stack" | "snake" | "breakout" | "game2048" | "memory";
 
 export interface GameMeta {
   id: GameId;
@@ -21,6 +21,7 @@ export const GAMES: readonly GameMeta[] = [
   { id: "snake", title: "SNAKE", sceneKey: "Snake", supportsCheckpoint: false },
   { id: "breakout", title: "BREAKOUT", sceneKey: "Breakout", supportsCheckpoint: true },
   { id: "game2048", title: "2048", sceneKey: "Game2048", supportsCheckpoint: true },
+  { id: "memory", title: "MEMORY", sceneKey: "Memory", supportsCheckpoint: false },
 ];
 
 export function getGameMeta(id: GameId): GameMeta {

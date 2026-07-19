@@ -282,7 +282,7 @@ export class BreakoutScene extends Phaser.Scene {
     brick.destroy();
     this.score += BREAKOUT_BRICK_SCORE;
     this.updateHud();
-    this.audio.play("hit");
+    this.audio.play("break");
     this.saveCheckpoint(); // persist after each brick cleared
 
     if (this.bricks.countActive(true) === 0) this.nextLevel();
@@ -291,6 +291,7 @@ export class BreakoutScene extends Phaser.Scene {
   /** Empty grid → advance to the next (harder) level; checkpoint is NOT cleared. */
   private nextLevel(): void {
     this.level += 1;
+    this.audio.play("levelup");
     this.buildBricks(new Array<boolean>(BRICK_COUNT).fill(true));
     this.resetBall();
   }
@@ -311,6 +312,7 @@ export class BreakoutScene extends Phaser.Scene {
     if (this.isOver) return;
     this.isOver = true;
     this.ball.body.setVelocity(0, 0);
+    this.audio.play("lose");
 
     this.sdk.gameplayStop();
     CheckpointSystem.clear(this.gameId);

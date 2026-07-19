@@ -155,6 +155,7 @@ export class Game2048Scene extends Phaser.Scene {
     if (this.isOver) return;
 
     const before = JSON.stringify(this.board);
+    const scoreBefore = this.score; // a merge is the only thing that raises score
     if (dc !== 0) {
       for (let r = 0; r < G2048_SIZE; r++) {
         this.board[r] = this.collapseLine(this.board[r], dc > 0);
@@ -171,7 +172,7 @@ export class Game2048Scene extends Phaser.Scene {
 
     this.spawnTile();
     this.render();
-    this.audio.play("score");
+    this.audio.play(this.score > scoreBefore ? "merge" : "score");
 
     // Persist a deep copy so later mutations can't corrupt the saved state.
     CheckpointSystem.save("game2048", {
@@ -247,6 +248,7 @@ export class Game2048Scene extends Phaser.Scene {
   }
 
   private flashWin(): void {
+    this.audio.play("levelup");
     const banner = this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT - 160, "2048!", {
         color: COLOR.accent,
@@ -266,7 +268,7 @@ export class Game2048Scene extends Phaser.Scene {
   private endRun(): void {
     if (this.isOver) return;
     this.isOver = true;
-    this.audio.play("hit");
+    this.audio.play("lose");
 
     this.sdk.gameplayStop();
     CheckpointSystem.clear(this.gameId);
