@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>HTML5 Arcade Starter</title>
+    <!--
+      The CrazyGames SDK v3 script is NOT hard-coded here on purpose: that would
+      make a network request on every local `npm run dev` and dirty the console.
+      Instead CrazyGamesSDK.init() dynamically injects
+      https://sdk.crazygames.com/crazygames-sdk-v3.js only when the game is built
+      with VITE_SDK_PROVIDER=crazygames. Local dev stays clean (NoopSDK, no script).
+    -->
+
+    <style>
+      html, body { margin: 0; height: 100%; background: #1b2838; overflow: hidden; }
+      body { touch-action: none; }
+      #app { width: 100%; height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
