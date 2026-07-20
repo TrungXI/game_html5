@@ -68,6 +68,9 @@ export const XP_PER_POINT: Record<string, number> = {
   // score is 10..1000 move-efficiency points; scale down so one game (~50 XP for a
   // perfect run) stays in line with the other games rather than leaping tiers.
   memory: 0.05,
+  // score is # moles whacked in 30s — a good run lands ~25-45. At 2 XP/point a
+  // strong run yields ~50-90 XP + XP_BASE, in line with tapjumper/stack/snake.
+  whack: 2,
 };
 // Rank tiers: cumulative XP thresholds, ascending. index 0 is the floor tier.
 export const RANKS: readonly { title: string; minXP: number; color: number }[] = [
@@ -124,6 +127,7 @@ export const GAME_ACCENTS: Record<string, number> = {
   breakout: 0xff6b6b, // coral
   game2048: 0xa78bfa, // violet
   memory: 0xff9f1c, // orange
+  whack: 0xf72585, // magenta
 };
 
 // ── Memory Match ────────────────────────────────────────────────────
@@ -147,3 +151,20 @@ export const MEMORY_SYMBOLS: readonly { shape: "circle" | "square" | "triangle" 
   { shape: "triangle", color: 0x06d6a0 },
   { shape: "diamond", color: 0xff6b6b },
 ];
+
+// ── Whack-a-Mole ────────────────────────────────────────────────────
+export const WHACK_COLS = 3;
+export const WHACK_ROWS = 3; // 3×3 = 9 holes
+export const WHACK_DURATION_MS = 30000; // 30-second run
+// Difficulty ramp: as the clock winds down, moles pop more often and stay up for
+// less time. Each value lerps from its START to its MIN across the full run.
+export const WHACK_SPAWN_INTERVAL_START = 900; // ms between mole pop-ups at t=0
+export const WHACK_SPAWN_INTERVAL_MIN = 380; // ms between pop-ups by the final seconds
+export const WHACK_UP_DURATION_START = 1100; // ms a mole stays up at t=0
+export const WHACK_UP_DURATION_MIN = 550; // ms a mole stays up by the final seconds
+export const WHACK_POINTS_PER_HIT = 1; // score += this per mole whacked
+// Mole face palette — cycled per pop so the grid stays lively (zero art files).
+export const WHACK_MOLE_COLORS = [
+  0x8d5524, 0xa0522d, 0xc68642, 0x6b4423,
+] as const;
+export const WHACK_HOLE_COLOR = 0x14202c; // dark ellipse behind each mole

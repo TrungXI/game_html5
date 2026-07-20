@@ -9,6 +9,7 @@ import { SnakeScene } from "../scenes/SnakeScene";
 import { BreakoutScene } from "../scenes/BreakoutScene";
 import { Game2048Scene } from "../scenes/Game2048Scene";
 import { MemoryScene } from "../scenes/MemoryScene";
+import { WhackScene } from "../scenes/WhackScene";
 import { GameOverScene } from "../scenes/GameOverScene";
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -35,6 +36,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     BreakoutScene,
     Game2048Scene,
     MemoryScene,
+    WhackScene,
     GameOverScene,
   ],
 };
